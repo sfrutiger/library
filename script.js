@@ -3,12 +3,14 @@ let newBook;
 const form = document.getElementById('inputForm');
 
 //book constructor
-function Book(title, author, pages, read){
-    this.title = title
-    this.author = author
-    this.pages = pages
-    this.read = read
-}
+class Book {
+    constructor(title, author, pages, read){
+        this.title = title
+        this.author = author
+        this.pages = pages
+        this.read = read
+    }
+};
 
 //dummy book
 /* const bookOne = new Book('A Tale of Two Cities', 'Charles Dickens', '567', 'true');
