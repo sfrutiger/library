@@ -1,6 +1,12 @@
 let myLibrary = [];
 let newBook;
+let readStatus = '';
 const form = document.getElementById('inputForm');
+const errorElement = document.getElementById('error');
+const bookTitle = document.querySelector('#title');
+const bookAuthor = document.querySelector('#author');
+const bookPages = document.querySelector('#pages');
+ 
 
 //book constructor
 class Book {
@@ -17,7 +23,6 @@ class Book {
 myLibrary.push(bookOne); */
 
 //read the radio buttons
-var readStatus = '';
 function displayRadioValue() {
     var ele = document.getElementsByName('readStatus');
       
@@ -27,19 +32,41 @@ function displayRadioValue() {
     }
 }
 
+//create new book
+function createNewBook () {
+    newBook = new Book(bookTitle.value, bookAuthor.value, bookPages.value, readStatus);
+    myLibrary.push(newBook);            
+}
+
 //add new book
 function addBookToLibrary(){
     event.preventDefault();
-    const bookTitle = document.querySelector('#title');
-    const bookAuthor = document.querySelector('#author');
-    const bookPages = document.querySelector('#pages');
     displayRadioValue();
 
-    newBook = new Book(bookTitle.value, bookAuthor.value, bookPages.value, readStatus);
-    myLibrary.push(newBook);
-    table.innerHTML = "";
-    form.reset();
-    generateTable(table, myLibrary);
+    let messages = [];
+    if (bookTitle.value === '' || bookTitle.value == null) {
+        messages.push('Title is required')}
+    
+    if (bookAuthor.value === '' || bookAuthor.value == null) {
+        messages.push('Author is required')}
+
+    if (bookPages.value === '' || bookTitle.value == null) {
+        messages.push('Number of pages is required')}
+
+    if (isNaN(bookPages.value)) {
+        messages.push('Number of pages must be a number')}
+
+    if (messages.length > 0) {
+        /* preventDefault() */
+        errorElement.innerText = messages.join(', ')}
+
+    else {
+        createNewBook();
+        table.innerHTML = '';
+        generateTable(table, myLibrary);
+        form.reset();
+        errorElement.innerText = '';
+    }
 }
 
 //select table and content
@@ -67,13 +94,13 @@ function generateTable(table, myLibrary) {
         readCell.appendChild(readBtn);
 
         //create remove button
-        let cell = row.insertCell();
-        let btn = document.createElement('button');
-        btn.innerHTML = 'Remove';
-        btn.className = 'removeButton';
-        btn.addEventListener('click', removeButtonFunction);
-        btn.setAttribute('id', x);
-        cell.appendChild(btn);
+        let removeCell = row.insertCell();
+        let removeBtn = document.createElement('button');
+        removeBtn.innerHTML = 'Remove';
+        removeBtn.className = 'removeButton';
+        removeBtn.addEventListener('click', removeButtonFunction);
+        removeBtn.setAttribute('id', x);
+        removeCell.appendChild(removeBtn);
     }
 };
 
@@ -98,5 +125,5 @@ let toggleReadStatus = () => {
 }
 
 
-
-document.addEventListener('DOMContentLoaded', generateTable(table, myLibrary), false);
+//might need this once local storage is added
+/* document.addEventListener('DOMContentLoaded', generateTable(table, myLibrary), false); */
